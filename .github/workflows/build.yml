@@ -1,0 +1,31 @@
+name: Build SmoothMotionHost
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -S SmoothMotionHost -B SmoothMotionHost/build -G "Visual Studio 17 2022" -A x64
+
+      - name: Build Release
+        run: cmake --build SmoothMotionHost/build --config Release
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: SmoothMotionHost-v0.1
+          path: |
+            SmoothMotionHost/build/Release/SmoothMotionHost.exe
+            SmoothMotionHost/run_without_sm86.cmd
+            SmoothMotionHost/launch_with_sm86.cmd
+            SmoothMotionHost/README.md
